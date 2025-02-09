@@ -64,19 +64,9 @@ class Server {
 
                 req.on('end', () => {
                     try {
-                        if (!body.trim()) {  // Check if the body is empty
-                            res.writeHead(400, { 'Content-Type': 'application/json' })
-                            return res.end(JSON.stringify({ message: MESSAGES.ERROR_MESSAGES.EMPTY_INPUT }));
-                        }
-
                         const data = JSON.parse(body); // server expects JSON data
-                        const word = data.word ? data.word.trim() : "";
-                        const definition = data.definition ? data.definition.trim() : "";
-
-                        if (!word || !definition) {  // Prevent empty words and definitions
-                            res.writeHead(400, { 'Content-Type': 'application/json' })
-                            return res.end(JSON.stringify({ message: MESSAGES.ERROR_MESSAGES.EMPTY_INPUT }));
-                        }
+                        const word = data.word;
+                        const definition = data.definition;
                         
                         // handle invalid input (disallow numbers)
                         if (/\d/.test(word) || /\d/.test(definition)) {
@@ -84,6 +74,7 @@ class Server {
                             res.writeHead(400, {'Content-Type': 'application/json'});
                             return res.end(JSON.stringify({message: MESSAGES.ERROR_MESSAGES.INVALID_INPUT }));
                         }
+
                         const add_word_result = this.dictionary.add_definition(word, definition);
                         if (!add_word_result) {
                             // 400: bad request, word already exists
@@ -91,7 +82,6 @@ class Server {
                             return res.end(JSON.stringify({message: MESSAGES.ERROR_MESSAGES.WORD_ALREADY_EXISTS }));
                         }
                         
-
                         // 201: resource created
                         res.writeHead(201, {'Content-Type': 'application/json'});
                         return res.end(JSON.stringify({
