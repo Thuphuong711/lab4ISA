@@ -4,7 +4,8 @@ const ERROR_MESSAGES = {
     WORD_ALREADY_EXISTS: 'Word already exists.',
     METHOD_NOT_ALLOWED: 'Invalid API method.',
     SERVER_ERROR: 'There\'s something wrong with the server. Sorry.',
-    INVALID_INPUT: 'accept only non-empty strings (disallow numbers)'
+    INVALID_INPUT: 'Accept only non-empty strings (disallow numbers).',
+    EMPTY_INPUT : 'Word and definition cannot be empty.',
 };
 const USER_MESSAGES = {
     TOTAL_NUMBER_OF_REQUESTS: (request_num) => `Request #${request_num}, word % not found!`,

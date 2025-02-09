@@ -64,9 +64,20 @@ class Server {
 
                 req.on('end', () => {
                     try {
-                        const data = JSON.parse(body);
-                        const word = data.word;
-                        const definition = data.definition;
+                        if (!body.trim()) {  // Check if the body is empty
+                            res.writeHead(400, { 'Content-Type': 'application/json' })
+                            return res.end(JSON.stringify({ message: MESSAGES.ERROR_MESSAGES.EMPTY_INPUT }));
+                        }
+
+                        const data = JSON.parse(body); // server expects JSON data
+                        const word = data.word ? data.word.trim() : "";
+                        const definition = data.definition ? data.definition.trim() : "";
+
+                        if (!word || !definition) {  // Prevent empty words and definitions
+                            res.writeHead(400, { 'Content-Type': 'application/json' })
+                            return res.end(JSON.stringify({ message: MESSAGES.ERROR_MESSAGES.EMPTY_INPUT }));
+                        }
+                        
                         // handle invalid input (disallow numbers)
                         if (/\d/.test(word) || /\d/.test(definition)) {
                             // 400: bad request, word or definition contains a digit.
@@ -83,7 +94,10 @@ class Server {
 
                         // 201: resource created
                         res.writeHead(201, {'Content-Type': 'application/json'});
-                        return res.end(JSON.stringify({message: MESSAGES.SUCCESS_MESSAGE.WORD_ADDED}));
+                        return res.end(JSON.stringify({
+                            message: MESSAGES.SUCCESS_MESSAGE.WORD_ADDED,
+                            dictionary: this.dictionary.get_all_entries()
+                        }));
                     } catch (error) {
                         // 500: internal Server Error
                         res.writeHead(500, {'Content-Type': 'application/json'});
