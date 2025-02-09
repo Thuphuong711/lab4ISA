@@ -89,4 +89,5 @@ class Server {
     }
 }
 
-module.exports = Server;
+const server = new Server(8000);
+server.start();
