@@ -9,11 +9,12 @@ const ERROR_MESSAGES = {
 };
 const USER_MESSAGES = {
     TOTAL_NUMBER_OF_REQUESTS: (request_num) => `Request #${request_num}, word % not found!`,
-    TOTAL_NUMBER_OF_WORDS: (total_words) => `There are ${total_words} words in the dictionary.`,
+    // TOTAL_NUMBER_OF_WORDS: (total_words) => `There are ${total_words} words in the dictionary.`,
 };
 
 const SUCCESS_MESSAGE = {
     WORD_ADDED: 'Word added successfully!',
 };
+
 
 module.exports = { ERROR_MESSAGES, USER_MESSAGES, SUCCESS_MESSAGE };

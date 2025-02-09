@@ -43,15 +43,18 @@ class Server {
                 if (error) {
                     // 404: not found, word is not in the dictionary.
                     res.writeHead(404, {'Content-Type': 'application/json'});
-                    return res.end(JSON.stringify({message: MESSAGES.ERROR_MESSAGES.WORD_DOES_NOT_EXIST }));
+                    let request_num = MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_REQUESTS(this.request_tracker.get_requests());
+                    return res.end(JSON.stringify({
+                        message: MESSAGES.ERROR_MESSAGES.WORD_DOES_NOT_EXIST,
+                        // total_number_of_words: MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_WORDS(this.dictionary.get_num_entries()),
+                        total_number_of_requests: request_num
+                    }));
                 }
                 // 200: successful request
 
                 res.writeHead(200, {'Content-Type': 'application/json'});
                 return res.end(JSON.stringify({
-                    definition: definition,
-                    total_number_of_words: MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_WORDS(this.dictionary.get_num_entries()),
-                    total_number_of_requests: MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_REQUESTS(this.request_tracker.get_requests())
+                    definition: definition
                 }));
             }
 
