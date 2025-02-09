@@ -9,7 +9,10 @@ const ERROR_MESSAGES = {
 };
 const USER_MESSAGES = {
     TOTAL_NUMBER_OF_REQUESTS: (request_num) => `Request #${request_num}`,
-    TOTAL_NUMBER_OF_WORDS: (total_words) => `There are ${total_words} words in the dictionary.`,
+    TOTAL_NUMBER_OF_WORDS: (total_words) => 
+        total_words === 1 
+            ? `There is ${total_words} word in the dictionary.` 
+            : `There are ${total_words} words in the dictionary.`
 };
 
 const SUCCESS_MESSAGE = {
