@@ -44,17 +44,22 @@ class Server {
                     // 404: not found, word is not in the dictionary.
                     res.writeHead(404, {'Content-Type': 'application/json'});
                     let request_num = MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_REQUESTS(this.request_tracker.get_requests());
+                    let num_entries = MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_WORDS(this.dictionary.get_num_entries());
                     return res.end(JSON.stringify({
                         message: MESSAGES.ERROR_MESSAGES.WORD_DOES_NOT_EXIST,
-                        // total_number_of_words: MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_WORDS(this.dictionary.get_num_entries()),
+                        total_number_of_words: num_entries,
                         total_number_of_requests: request_num
                     }));
                 }
                 // 200: successful request
 
                 res.writeHead(200, {'Content-Type': 'application/json'});
+                let request_num = MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_REQUESTS(this.request_tracker.get_requests());
+                let num_entries = MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_WORDS(this.dictionary.get_num_entries());
                 return res.end(JSON.stringify({
-                    definition: definition
+                    definition: definition,
+                    total_number_of_words: num_entries,
+                    total_number_of_requests: request_num
                 }));
             }
 
@@ -81,15 +86,25 @@ class Server {
                         const add_word_result = this.dictionary.add_definition(word, definition);
                         if (!add_word_result) {
                             // 400: bad request, word already exists
+                            let num_entries = MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_WORDS(this.dictionary.get_num_entries());
+                            let request_num = MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_REQUESTS(this.request_tracker.get_requests());
                             res.writeHead(400, {'Content-Type': 'application/json'});
-                            return res.end(JSON.stringify({message: MESSAGES.ERROR_MESSAGES.WORD_ALREADY_EXISTS }));
+                            return res.end(JSON.stringify({
+                                message: MESSAGES.ERROR_MESSAGES.WORD_ALREADY_EXISTS,
+                                total_number_of_words: num_entries,
+                                total_number_of_requests: request_num
+                            }));
                         }
                         
                         // 201: resource created
                         res.writeHead(201, {'Content-Type': 'application/json'});
+                        let num_entries = MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_WORDS(this.dictionary.get_num_entries());
+                        let request_num = MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_REQUESTS(this.request_tracker.get_requests());
                         return res.end(JSON.stringify({
                             message: MESSAGES.SUCCESS_MESSAGE.WORD_ADDED,
-                            dictionary: this.dictionary.get_all_entries()
+                            dictionary: this.dictionary.get_all_entries(),
+                            total_number_of_words: num_entries,
+                            total_number_of_requests: request_num
                         }));
                     } catch (error) {
                         // 500: internal Server Error
